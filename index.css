@@ -10,11 +10,8 @@ html, body {
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
   max-width: 320px;
-
   margin: 30px auto;
 
   border: 5px solid black;
@@ -28,18 +25,18 @@ img {
 }
 
 input, button{ 
-  font-size: 1.5em;
-  text-align: center;
-
-  margin: 0;
-  padding: 0;
   border: 0;
   padding: 15px ;
   border-radius: 8px;
+
+  font-size: 1.5em;
+  text-align: center;
 }
 
 input{
   background-color: lightgray;
+
+  margin: 10px 0;
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
