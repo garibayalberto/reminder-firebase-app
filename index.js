@@ -1,6 +1,6 @@
 import { appSettings } from "./secrets.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getDatabase, ref, push, onValue  } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getDatabase, ref, push, onValue , remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
@@ -22,24 +22,45 @@ function appendItemToShoppingListEl(item) {
 
   let newEl = document.createElement("li");
   newEl.textContent = itemValue;
+  newEl.addEventListener("click", function() {
+    let exactLocationOfItemInDB = ref(database, `shoppingList/${itemID}`)
+    remove(exactLocationOfItemInDB);
+  })
+
   shoppingListEl.append(newEl);
 }
 function clearShoppingListEl() {
   shoppingListEl.innerHTML = "";
 }
 
-addButtonEl.addEventListener("click" , function() {
+function inputFieldCreateItem() {
   let inputValue = inputFieldEl.value;
-  push(shoppingListInDB, inputValue);
-  clearInputFieldEl();
+  if(inputValue != "") {
+    push(shoppingListInDB, inputValue);
+    clearInputFieldEl();
+  }
+}
+
+inputFieldEl.addEventListener('keyup', function (e) {
+  if (e.key === 'Enter'){
+      inputFieldCreateItem();
+  }
+});
+
+addButtonEl.addEventListener("click" , function() {
+  inputFieldCreateItem();
 });
 
 onValue(shoppingListInDB, function(snapshot) {
-  let itemsArray = Object.entries(snapshot.val());
-  clearShoppingListEl();
-  for(let i = 0 ; i < itemsArray.length; i++){
-    let currentItem = itemsArray[i];
-    appendItemToShoppingListEl(currentItem);
+  if(snapshot.exists()) {
+    let itemsArray = Object.entries(snapshot.val());
+    clearShoppingListEl();
+    for(let i = 0 ; i < itemsArray.length; i++){
+      let currentItem = itemsArray[i];
+      appendItemToShoppingListEl(currentItem);
+    }
   }
-
+  else {
+    shoppingListEl.innerHTML = "No items here ... yet";
+  }
 })
