@@ -15,8 +15,14 @@ const shoppingListEl = document.getElementById('shopping-list');
 function clearInputFieldEl() {
   inputFieldEl.value = "";
 }
-function appendItemToShoppingListEl(itemValue) {
-  shoppingListEl.innerHTML += `<li>${itemValue}</li>`
+function appendItemToShoppingListEl(item) {
+  //shoppingListEl.innerHTML += `<li>${itemValue}</li>`
+  let itemID = item[0]
+  let itemValue = item[1];
+
+  let newEl = document.createElement("li");
+  newEl.textContent = itemValue;
+  shoppingListEl.append(newEl);
 }
 function clearShoppingListEl() {
   shoppingListEl.innerHTML = "";
@@ -29,9 +35,11 @@ addButtonEl.addEventListener("click" , function() {
 });
 
 onValue(shoppingListInDB, function(snapshot) {
-  let itemsArray = Object.values(snapshot.val());
+  let itemsArray = Object.entries(snapshot.val());
   clearShoppingListEl();
   for(let i = 0 ; i < itemsArray.length; i++){
-    appendItemToShoppingListEl(itemsArray[i]);
+    let currentItem = itemsArray[i];
+    appendItemToShoppingListEl(currentItem);
   }
+
 })
